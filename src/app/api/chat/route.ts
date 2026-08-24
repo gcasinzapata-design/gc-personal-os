@@ -1,4 +1,5 @@
 // @ts-nocheck
+export const dynamic = 'force-dynamic'
 // Copiloto IA Financiero — Claude Haiku → Gemini Flash (free) fallback
 import { NextRequest, NextResponse } from 'next/server'
 import { callAI } from '@/lib/ai'

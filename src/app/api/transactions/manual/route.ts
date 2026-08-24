@@ -1,4 +1,5 @@
 // @ts-nocheck
+export const dynamic = 'force-dynamic'
 // Manual transaction entry — for cash, Yape, or any tx not in EECCs
 import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'

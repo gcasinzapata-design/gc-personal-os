@@ -1,4 +1,5 @@
 // @ts-nocheck
+export const dynamic = 'force-dynamic'
 // EECC smart validation — compares parsed transactions vs existing DB
 import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
