@@ -32,11 +32,19 @@ REGLAS CRÍTICAS:
 - Real Club=gasto,Club | ITF=gasto,Impuestos`
 
 async function extractText(buffer: Buffer): Promise<string> {
-  const pdfParse = (await import('pdf-parse')).default
+  if (typeof (globalThis as any).DOMMatrix === 'undefined') {
+    (globalThis as any).DOMMatrix = class DOMMatrix { constructor() {} }
+    ;(globalThis as any).Path2D = class Path2D {}
+    ;(globalThis as any).ImageData = class ImageData {}
+  }
   try {
-    const data = await pdfParse(buffer)
+    const pdfParse = (await import('pdf-parse/lib/pdf-parse.js' as any)).default
+    const data = await pdfParse(buffer, { max: 0 })
     return data.text || ''
-  } catch { return '' }
+  } catch (e: any) {
+    console.error('pdf-parse error:', e.message)
+    return ''
+  }
 }
 
 export async function POST(req: NextRequest) {
