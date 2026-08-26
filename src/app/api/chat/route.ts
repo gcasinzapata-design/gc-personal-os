@@ -8,7 +8,7 @@ import { createServiceClient } from '@/lib/supabase'
 
 const S = (n) => `S/ ${new Intl.NumberFormat('es-PE',{minimumFractionDigits:0}).format(Math.round(n)||0)}`
 
-function buildCoachContext(tx, cards, debts, habits, todayLogs, meals, checkin, recentWorkouts) {
+function buildCoachContext(tx, cards, debts, habits, todayLogs, meals, checkin, recentWorkouts, healthMetrics) {
   const MONTHS = ['2026-01','2026-02','2026-03','2026-04','2026-05','2026-06','2026-07','2026-08']
   const MN = {'2026-01':'Ene','2026-02':'Feb','2026-03':'Mar','2026-04':'Abr','2026-05':'May','2026-06':'Jun','2026-07':'Jul','2026-08':'Ago'}
   const amtPen = (t) => Number(t.amount_pen||t.amount||0)
@@ -93,6 +93,11 @@ FALTAN:    ${Math.max(0,Math.round(remaining.calories))} kcal | Prot: ${Math.max
 
 REGLA: Cuando GC pregunte que comer, calcula EXACTAMENTE cuanto le falta y recomienda comidas peruanas accesibles que completen esos macros. Siempre incluye el macro breakdown de tu recomendacion.
 
+=== APPLE HEALTH (ultimos 3 dias) ===
+${(healthMetrics||[]).length > 0 ?
+  (healthMetrics||[]).map(h => `  ${h.log_date}: Sueno ${h.sleep_hours||'—'}h | FC reposo ${h.resting_hr||'—'}bpm | HRV ${h.hrv_ms||'—'}ms | Pasos ${h.steps?.toLocaleString()||'—'} | Cal activas ${h.active_calories||'—'}`).join('\n')
+  : '  Sin datos de Apple Health (conectar via Shortcuts)'}
+
 === ESTADO HOY ===
 Energia: ${energy}/5 ${energy>=4?'(alto)':energy<=2?'(bajo - adaptar)':'(normal)'}
 Estres:  ${stress}/5 ${stress>=4?'(alto - cuidado)':stress<=2?'(bajo - bien)':'(moderado)'}
@@ -137,7 +142,7 @@ export async function POST(req: NextRequest) {
   const today = new Date().toISOString().slice(0, 10)
   const sb = createServiceClient()
 
-  const [txR, cR, dR, habR, logsR, mealsR, checkinR, workoutsR] = await Promise.all([
+  const [txR, cR, dR, habR, logsR, mealsR, checkinR, workoutsR, healthR] = await Promise.all([
     sb.from('transactions').select('date,amount,amount_pen,type,category').eq('user_id',uid).eq('source','eecc').gte('date','2026-01-01').limit(400),
     sb.from('credit_cards').select('*').eq('user_id',uid).eq('is_active',true),
     sb.from('debts').select('*').eq('user_id',uid).eq('is_active',true),
@@ -146,13 +151,14 @@ export async function POST(req: NextRequest) {
     sb.from('meal_logs').select('*').eq('user_id',uid).eq('log_date',today).order('created_at'),
     sb.from('daily_checkin').select('*').eq('user_id',uid).eq('log_date',today).maybeSingle(),
     sb.from('workout_logs').select('*').eq('user_id',uid).gte('log_date', new Date(Date.now()-7*86400000).toISOString().slice(0,10)).order('log_date',{ascending:false}).limit(5),
+    sb.from('health_metrics').select('*').eq('user_id',uid).gte('log_date', new Date(Date.now()-3*86400000).toISOString().slice(0,10)).order('log_date',{ascending:false}).limit(3),
   ])
 
   const systemPrompt = buildCoachContext(
     txR.data||[], cR.data||[], dR.data||[],
     habR.data||[], (logsR.data||[]).map(l=>l.habit_id),
     mealsR.data||[], checkinR.data,
-    workoutsR.data||[]
+    workoutsR.data||[], healthR.data||[]
   )
 
   const chatMsgs = messages.map(m=>({role:m.role==='user'?'user':'assistant', content:m.content}))
