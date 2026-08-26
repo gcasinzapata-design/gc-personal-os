@@ -3,6 +3,7 @@ import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import Sidebar from '@/components/dashboard/Sidebar'
+import MobileNav from '@/components/dashboard/MobileNav'
 import { Menu, X } from 'lucide-react'
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {

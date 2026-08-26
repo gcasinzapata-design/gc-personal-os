@@ -1,0 +1,20 @@
+{
+  "name": "GC Personal OS",
+  "short_name": "GC OS",
+  "description": "Tu asistente de vida — finanzas, fitness, nutricion, mentalidad",
+  "start_url": "/dashboard/today",
+  "display": "standalone",
+  "background_color": "#0a0a0f",
+  "theme_color": "#3b82f6",
+  "orientation": "portrait",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ],
+  "shortcuts": [
+    { "name": "Hoy", "url": "/dashboard/today" },
+    { "name": "Nutricion", "url": "/dashboard/nutricion" },
+    { "name": "Entrenamiento", "url": "/dashboard/entrenamiento" },
+    { "name": "Coach", "url": "/dashboard/chat" }
+  ]
+}
