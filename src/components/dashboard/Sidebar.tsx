@@ -5,13 +5,14 @@ import { signOut } from 'next-auth/react'
 import {
   LayoutDashboard, Sun, ArrowLeftRight, TrendingDown, Tag, BarChart2,
   MessageSquareText, Upload, Target, ScanLine, LogOut, Zap, Brain,
-  CreditCard, CheckSquare, Flame, Inbox
+  CreditCard, CheckSquare, Flame, Inbox, Dumbbell
 } from 'lucide-react'
 import Image from 'next/image'
 
 const NAV = [
   { href: '/dashboard/today', icon: Sun, label: 'Hoy', group: 'main', badge: null },
   { href: '/dashboard/nutricion', icon: Flame, label: 'Nutricion', group: 'main' },
+  { href: '/dashboard/entrenamiento', icon: Dumbbell, label: 'Entrenamiento', group: 'main' },
   { href: '/dashboard/tasks', icon: CheckSquare, label: 'Tareas', group: 'main' },
   { href: '/dashboard/habits', icon: Flame, label: 'Hábitos', group: 'main' },
   { href: '/dashboard', icon: LayoutDashboard, label: 'Finanzas', group: 'finanzas' },
