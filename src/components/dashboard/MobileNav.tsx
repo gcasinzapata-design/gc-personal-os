@@ -1,13 +1,13 @@
 'use client'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Sun, Flame, Dumbbell, MessageSquareText, LayoutDashboard } from 'lucide-react'
+import { Sun, Flame, Dumbbell, MessageSquareText, TrendingUp } from 'lucide-react'
 
 const TABS = [
   { href: '/dashboard/today', icon: Sun, label: 'Hoy' },
-  { href: '/dashboard/nutricion', icon: Flame, label: 'Nutrición' },
+  { href: '/dashboard/tracking', icon: TrendingUp, label: 'Tracking' },
   { href: '/dashboard/entrenamiento', icon: Dumbbell, label: 'Entreno' },
-  { href: '/dashboard', icon: LayoutDashboard, label: 'Finanzas' },
+  { href: '/dashboard/nutricion', icon: Flame, label: 'Nutrición' },
   { href: '/dashboard/chat', icon: MessageSquareText, label: 'Coach' },
 ]
 
